@@ -19,7 +19,7 @@ export class HttpClient implements IHttpClient {
         .get(resourceUri)
         .then((result => {
           const data: IHttpResponse<T> = {
-            data: JSON.parse(result.data),
+            data: result.data,
             message: result.statusText,
             statusCode: result.status,
           };
@@ -35,7 +35,7 @@ export class HttpClient implements IHttpClient {
         .post(resourceUri, JSON.stringify(postData))
         .then((result => {
           const data: IHttpResponse<T> = {
-            data: JSON.parse(result.data),
+            data: result.data,
             message: result.statusText,
             statusCode: result.status,
           };
@@ -51,7 +51,7 @@ export class HttpClient implements IHttpClient {
         .put(resourceUri, JSON.stringify(putData))
         .then((result => {
           const data: IHttpResponse<T> = {
-            data: JSON.parse(result.data),
+            data: result.data,
             message: result.statusText,
             statusCode: result.status,
           };

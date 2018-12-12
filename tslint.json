@@ -22,13 +22,6 @@
       ]
     }
   },
-  "jsRules": {
-    "max-line-length": {
-      "options": [
-        120
-      ]
-    }
-  },
   "extends": [
     "tslint:latest",
     "tslint-config-prettier"

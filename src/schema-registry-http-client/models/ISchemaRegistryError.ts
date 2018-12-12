@@ -1,6 +1,8 @@
+import { SchemaRegistryErrorCode } from "./SchemaRegistryErrorCode";
+
 export interface ISchemaRegistryError {
   httpStatusCode: number;
-  errorCode: string;
+  errorCode: SchemaRegistryErrorCode;
   message: string;
 }
 
