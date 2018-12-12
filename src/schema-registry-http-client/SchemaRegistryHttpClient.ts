@@ -3,7 +3,9 @@ import { ISchemaRegistryHttpClient } from './ISchemaRegistryHttpClient';
 import { CompatibilityType, IConfigurationResult, ISchemaRegistryError, ISchemaResult, SchemaRegistryErrorCode } from './models';
 
 export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
-  constructor(private httpClient: IHttpClient) { }
+  constructor(private httpClient: IHttpClient) {
+    httpClient.addHeader("Accept", "application/vnd.schemaregistry.v1+json; q=0.9, application/json; q=0.5");
+  }
 
   public isCompatible(targetSubjectName: string, targetSubjectVersion: string, sourceSchema: string): Promise<boolean> {
     throw new Error("Method not implemented.");
@@ -49,20 +51,37 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
     throw new Error("Method not implemented.");
   }
 
-  public setGlobalCompatiblity(compatiblity: CompatibilityType): Promise<IConfigurationResult> {
-    throw new Error("Method not implemented.");
+  public async setGlobalCompatiblity(compatibility: CompatibilityType): Promise<IConfigurationResult> {
+    try {
+      const result = await this.httpClient
+        .put<IConfigurationResult>(`/config`, { compatibility });
+      return result.data;
+    }
+    catch (ex) {
+      throw this.toSchemaRegistryError(ex);
+    }
   }
 
   public async getConfigurationation(): Promise<IConfigurationResult> {
-    const promise = this.httpClient
-      .get<IConfigurationResult>('/config');
-
-    const result = await promise;
-    return result.data;
+    try {
+      const result = await this.httpClient
+        .get<IConfigurationResult>('/config');;
+      return result.data;
+    }
+    catch (ex) {
+      throw this.toSchemaRegistryError(ex);
+    }
   }
 
-  public setSubjectCompatibility(subjectName: string, compatiblity: CompatibilityType): Promise<IConfigurationResult> {
-    throw new Error("Method not implemented.");
+  public async setSubjectCompatibility(subjectName: string, compatibility: CompatibilityType): Promise<IConfigurationResult> {
+    try {
+      const result = await this.httpClient
+        .put<IConfigurationResult>(`/config/${subjectName}`, { compatibility });
+      return result.data;
+    }
+    catch (ex) {
+      throw this.toSchemaRegistryError(ex);
+    }
   }
 
   public async getSubjectConfiguration(subjectName: string): Promise<IConfigurationResult> {

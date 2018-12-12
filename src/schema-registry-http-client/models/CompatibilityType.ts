@@ -1,3 +1,6 @@
 export enum CompatibilityType {
-  NONE, FULL, FORWARD, BACKWARD
+  NONE = "none",
+  FULL = "full",
+  FORWARD = "forward",
+  BACKWARD = "backward"
 }
