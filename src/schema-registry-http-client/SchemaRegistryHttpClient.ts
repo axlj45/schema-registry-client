@@ -96,16 +96,20 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
     }
   }
 
-  public async getSchemaBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<string> {
+  public async getSchemaBySubjectVersion(subjectName: string, versionIdentifier: number | string): Promise<object> {
     const resource = `/subjects/${subjectName}/versions/${versionIdentifier}/schema`;
 
     try {
-      const result = await this.httpClient.get<string>(resource);
+      const result = await this.httpClient.get<object>(resource);
       return result.data;
     }
     catch (ex) {
       throw this.toSchemaRegistryError(ex);
     }
+  }
+
+  public async getLatestSchemaBySubject(subjectName: string): Promise<object> {
+    return this.getSchemaBySubjectVersion(subjectName, 'latest');
   }
 
   public async createSchema(subjectName: string, schema: ISchemaRequest): Promise<ISchemaResult> {

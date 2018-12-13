@@ -8,7 +8,8 @@ export interface ISchemaRegistryHttpClient {
   deleteSubject(subjectName: string): Promise<number[]>;  // List of deleted subject versions
   deleteSchemaBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<number> // Version ID of deleted schema
   getSchemaInfoBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<ISchemaResult>;
-  getSchemaBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<string>;
+  getSchemaBySubjectVersion(subjectName: string, versionIdentifier: number | string): Promise<object>;
+  getLatestSchemaBySubject(subjectName: string): Promise<object>;
   createSchema(subjectName: string, schema: ISchemaRequest): Promise<ISchemaResult>;
   schemaExists(subjectName: string, schema: ISchemaRequest): Promise<ISchemaResult>;
   isCompatible(targetSubjectName: string, targetSubjectVersion: string, sourceSchema: ISchemaRequest): Promise<boolean>
