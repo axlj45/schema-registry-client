@@ -10,10 +10,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
 
   public async isCompatible(targetSubjectName: string, targetSubjectVersion: string, sourceSchema: ISchemaRequest): Promise<boolean> {
     const resource = `/compatibility/subjects/${targetSubjectName}/versions/${targetSubjectVersion}`;
+
     try {
       const result = await this.httpClient
-        .post<ISchemaRequest, boolean>(resource, sourceSchema);
-      return result.data;
+        .post<ISchemaRequest, { is_compatible: boolean }>(resource, sourceSchema);
+      return result.data.is_compatible;
     }
     catch (ex) {
       throw this.toSchemaRegistryError(ex);
@@ -25,9 +26,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getSchemaById(id: number): Promise<string> {
+    const resource = `/schemas/ids/${id}`
+
     try {
-      const result = await this.httpClient
-        .get<string>(`/schemas/ids/${id}`);;
+      const result = await this.httpClient.get<string>(resource);
       return result.data;
     }
     catch (ex) {
@@ -36,9 +38,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getSubjects(): Promise<string[]> {
+    const resource = '/subjects';
+
     try {
-      const result = await this.httpClient
-        .get<string[]>('/subjects');;
+      const result = await this.httpClient.get<string[]>(resource);
       return result.data;
     }
     catch (ex) {
@@ -47,9 +50,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getSubjectVersions(subjectName: string): Promise<number[]> {
+    const resource = `/subjects/${subjectName}/versions`;
+
     try {
-      const result = await this.httpClient
-        .get<number[]>(`/subjects/${subjectName}/versions`);;
+      const result = await this.httpClient.get<number[]>(resource);
       return result.data;
     }
     catch (ex) {
@@ -58,9 +62,9 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async deleteSubject(subjectName: string): Promise<number[]> {
+    const resource = `/subjects/${subjectName}`;
     try {
-      const result = await this.httpClient
-        .delete<number[]>(`/subjects/${subjectName}`);;
+      const result = await this.httpClient.delete<number[]>(resource);;
       return result.data;
     }
     catch (ex) {
@@ -69,9 +73,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async deleteSchemaBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<number> {
+    const resource = `/subjects/${subjectName}/versions/${versionIdentifier}`;
+
     try {
-      const result = await this.httpClient
-        .delete<number>(`/subjects/${subjectName}/versions/${versionIdentifier}`);;
+      const result = await this.httpClient.delete<number>(resource);
       return result.data;
     }
     catch (ex) {
@@ -80,9 +85,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getSchemaInfoBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<ISchemaResult> {
+    const resource = `/subjects/${subjectName}/versions/${versionIdentifier}`;
+
     try {
-      const result = await this.httpClient
-        .get<ISchemaResult>(`/subjects/${subjectName}/versions/${versionIdentifier}`);;
+      const result = await this.httpClient.get<ISchemaResult>(resource);
       return result.data;
     }
     catch (ex) {
@@ -91,9 +97,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getSchemaBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<string> {
+    const resource = `/subjects/${subjectName}/versions/${versionIdentifier}/schema`;
+
     try {
-      const result = await this.httpClient
-        .get<string>(`/subjects/${subjectName}/versions/${versionIdentifier}/schema`);;
+      const result = await this.httpClient.get<string>(resource);
       return result.data;
     }
     catch (ex) {
@@ -102,9 +109,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async createSchema(subjectName: string, schema: ISchemaRequest): Promise<ISchemaResult> {
+    const resource = `/subjects/${subjectName}/versions`;
+
     try {
       const result = await this.httpClient
-        .post<ISchemaRequest, ISchemaResult>(`/subjects/${subjectName}/versions`, schema);;
+        .post<ISchemaRequest, ISchemaResult>(resource, schema);;
       return result.data;
     }
     catch (ex) {
@@ -113,9 +122,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async schemaExists(subjectName: string, schema: ISchemaRequest): Promise<ISchemaResult> {
+    const resource = `/subjects/${subjectName}`;
+
     try {
       const result = await this.httpClient
-        .post<ISchemaRequest, ISchemaResult>(`/subjects/${subjectName}`, schema);;
+        .post<ISchemaRequest, ISchemaResult>(resource, schema);;
       return result.data;
     }
     catch (ex) {
@@ -124,9 +135,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async setGlobalCompatiblity(compatibility: CompatibilityType): Promise<IConfigurationResult> {
+    const resource = '/config'
+
     try {
       const result = await this.httpClient
-        .put<IConfigurationResult, IConfigurationResult>(`/config`, { compatibility });
+        .put<IConfigurationResult, IConfigurationResult>(resource, { compatibility });
       return result.data;
     }
     catch (ex) {
@@ -135,9 +148,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getConfigurationation(): Promise<IConfigurationResult> {
+    const resource = '/config';
+
     try {
-      const result = await this.httpClient
-        .get<IConfigurationResult>('/config');;
+      const result = await this.httpClient.get<IConfigurationResult>(resource);;
       return result.data;
     }
     catch (ex) {
@@ -146,9 +160,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async setSubjectCompatibility(subjectName: string, compatibility: CompatibilityType): Promise<IConfigurationResult> {
+    const resource = `/config/${subjectName}`;
+
     try {
       const result = await this.httpClient
-        .put<IConfigurationResult, IConfigurationResult>(`/config/${subjectName}`, { compatibility });
+        .put<IConfigurationResult, IConfigurationResult>(resource, { compatibility });
       return result.data;
     }
     catch (ex) {
@@ -157,9 +173,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
   }
 
   public async getSubjectConfiguration(subjectName: string): Promise<IConfigurationResult> {
+    const resource = `/config/${subjectName}`;
+
     try {
       const result = await this.httpClient
-        .get<IConfigurationResult>(`/config/${subjectName}`);
+        .get<IConfigurationResult>(resource);
       return result.data;
     }
     catch (ex) {
