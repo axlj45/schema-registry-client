@@ -82,6 +82,7 @@
     "semantic-release": "^15.12.4"
   },
   "dependencies": {
+    "avsc": "^5.4.7",
     "axios": "^0.18.0"
   }
 }
