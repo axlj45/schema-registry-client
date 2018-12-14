@@ -1,6 +1,6 @@
 {
   "name": "schema-registry-client",
-  "version": "1.0.0",
+  "version": "0.0.0-development",
   "description": "Confluent Avro schema registry client",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/axlj45/schema-registry-client.git"
+    "url": "https://github.com/axlj45/schema-registry-client.git"
   },
   "files": [
     "dist",
@@ -48,10 +48,10 @@
     ],
     "coverageThreshold": {
       "global": {
-        "branches": 80,
-        "functions": 80,
-        "lines": 80,
-        "statements": 80
+        "branches": 0,
+        "functions": 0,
+        "lines": 0,
+        "statements": 0
       }
     },
     "collectCoverageFrom": [
@@ -65,21 +65,27 @@
     "semi": false,
     "singleQuote": true
   },
+  "config": {
+    "commitizen": {
+      "path": "cz-conventional-changelog"
+    }
+  },
   "devDependencies": {
     "@types/jest": "^23.3.10",
     "@types/lodash": "^4.14.118",
     "@types/mkdirp": "^0.5.2",
     "@types/mock-fs": "^3.6.30",
     "@types/node": "^10.12.12",
+    "cz-conventional-changelog": "^2.1.0",
     "jest": "^23.6.0",
     "mock-fs": "^4.7.0",
+    "semantic-release": "^15.12.5",
+    "travis-deploy-once": "^5.0.10",
     "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.2.2",
-    "travis-deploy-once": "^5.0.9",
-    "semantic-release": "^15.12.4"
+    "typescript": "^3.2.2"
   },
   "dependencies": {
     "avsc": "^5.4.7",
