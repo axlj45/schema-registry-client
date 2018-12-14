@@ -1,3 +1,2 @@
-export function placeholder(): number {
-  return 0;
-}
+export * from './ISchemaRegistryClient';
+export * from './AvroSchemaRegistryClient';
