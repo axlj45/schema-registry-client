@@ -19,11 +19,11 @@ export class SchemaRegistryEncoder {
     }
 
     const schemaRegistryId = buffer.readUInt32BE(this.ID_BUFFER_POSITION);
-    return { versionByte, schemaRegistryId, buffer };
+    return { versionByte, schemaRegistryId, buffer: buffer.slice(5) };
   }
 
   public encodeAvroBuffer(request: ISchemaRegistryEncoding): ISchemaRegistryEncoding {
-    const buffer = request.buffer || new Buffer(0);
+    const buffer = request.buffer || Buffer.alloc(0);
     const originalBufferLength = buffer.length;
 
     if (originalBufferLength < 6) {
@@ -33,7 +33,7 @@ export class SchemaRegistryEncoder {
     const encodingLength = this.VERSION_BUFFER_WIDTH + this.ID_BUFFER_WIDTH;
     const registryBufferSize = encodingLength + originalBufferLength;
 
-    const registryBuffer = new Buffer(registryBufferSize);
+    const registryBuffer = Buffer.alloc(registryBufferSize);
     registryBuffer.writeUInt8(request.versionByte, this.SCHEMA_REGISTRY_VERSION);
     registryBuffer.writeUInt32BE(request.schemaRegistryId, this.ID_BUFFER_POSITION);
     buffer.copy(registryBuffer, encodingLength);
