@@ -10,24 +10,22 @@ export class AvroSchemaRegistryClient implements ISchemaRegistryClient {
   ) { }
 
   public async encodeBySubject<Tin>(obj: Tin, subject: string): Promise<Buffer> {
-    const registrySchema = await this.client.getLatestSchemaBySubject(subject);
-    const schema = JSON.stringify(registrySchema);
-    const buffer = this.serializer.serialize(obj, schema);
-    return buffer;
+    const schemaInfo = await this.client.getLatestSchemaInfoBySubject(subject);
+    const buffer = this.serializer.serialize(obj, schemaInfo.schema);
+    const avroResult = this.encoder.encodeAvroBuffer({ buffer, schemaRegistryId: schemaInfo.id, versionByte: 0 });
+    return avroResult.buffer || Buffer.alloc(0);
   }
 
   public async encodeById<Tin>(obj: Tin, id: number): Promise<Buffer> {
-    const registrySchema = await this.client.getSchemaById(id);
-    const schema = JSON.stringify(registrySchema);
-    const buffer = this.serializer.serialize(obj, schema);
+    const schemaRequest = await this.client.getSchemaById(id);
+    const buffer = this.serializer.serialize(obj, JSON.parse(schemaRequest.schema));
     return buffer;
   }
 
   public async decode<Tout>(buffer: Buffer): Promise<Tout> {
     const encoding = this.encoder.decodeAvroBuffer(buffer);
-    const registrySchema = await this.client.getSchemaById(encoding.schemaRegistryId);
-    const schema = JSON.stringify(registrySchema);
-    const obj = this.serializer.deserialize<Tout>(buffer, schema);
+    const schemaRequest = await this.client.getSchemaById(encoding.schemaRegistryId);
+    const obj = this.serializer.deserialize<Tout>(encoding.buffer, JSON.parse(schemaRequest.schema));
     return obj;
   }
 }

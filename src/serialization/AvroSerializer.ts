@@ -3,7 +3,7 @@ import { ISerializer } from './ISerializer';
 
 export class AvroSerializer implements ISerializer {
   public serialize<Tin>(obj: Tin, schema: string): Buffer {
-    const avro = Type.forSchema(schema);
+    const avro = Type.forSchema(JSON.parse(schema));
     return avro.toBuffer(obj);
   }
 

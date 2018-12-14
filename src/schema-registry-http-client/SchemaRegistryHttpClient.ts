@@ -3,7 +3,7 @@ import { ISchemaRegistryHttpClient } from './ISchemaRegistryHttpClient';
 import { CompatibilityType, IConfigurationResult, ISchemaRegistryError, ISchemaResult } from './models';
 import { ISchemaRequest } from './models/ISchemaRequest';
 
-export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
+export class SchemaRegistryHttpClient implements ISchemaRegistryHttpClient {
   constructor(private httpClient: IHttpClient) {
     httpClient.addHeader("Accept", "application/vnd.schemaregistry.v1+json, application/vnd.schemaregistry+json, application/json");
   }
@@ -25,11 +25,11 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
     return this.isCompatible(targetSubjectName, 'latest', sourceSchema);
   }
 
-  public async getSchemaById(id: number): Promise<string> {
+  public async getSchemaById(id: number): Promise<ISchemaRequest> {
     const resource = `/schemas/ids/${id}`
 
     try {
-      const result = await this.httpClient.get<string>(resource);
+      const result = await this.httpClient.get<ISchemaRequest>(resource);
       return result.data;
     }
     catch (ex) {
@@ -84,7 +84,7 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
     }
   }
 
-  public async getSchemaInfoBySubjectVersion(subjectName: string, versionIdentifier: number): Promise<ISchemaResult> {
+  public async getSchemaInfoBySubjectVersion(subjectName: string, versionIdentifier: number | string): Promise<ISchemaResult> {
     const resource = `/subjects/${subjectName}/versions/${versionIdentifier}`;
 
     try {
@@ -94,6 +94,10 @@ export class SchemaRegistryClient implements ISchemaRegistryHttpClient {
     catch (ex) {
       throw this.toSchemaRegistryError(ex);
     }
+  }
+
+  public async getLatestSchemaInfoBySubject(subjectName: string): Promise<ISchemaResult> {
+    return this.getSchemaInfoBySubjectVersion(subjectName, 'latest');
   }
 
   public async getSchemaBySubjectVersion(subjectName: string, versionIdentifier: number | string): Promise<object> {
