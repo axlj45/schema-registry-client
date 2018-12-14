@@ -1,5 +1,5 @@
 export default interface ISchemaRegistryEncoding {
-  versionByte: 0;
+  versionByte: number;
   schemaRegistryId: number;
   buffer?: Buffer;
 }
