@@ -1,5 +1,5 @@
-import { AvroSchemaRegistryClient } from "./AvroSchemaRegistryClient";
 import { CachingHttpClient, HttpClient, IHttpClient } from "./http-client";
+import { AvroSchemaRegistryClient } from "./schema-registry-client";
 import { SchemaRegistryHttpClient } from './schema-registry-http-client';
 
 export class SchemaRegistryClient {

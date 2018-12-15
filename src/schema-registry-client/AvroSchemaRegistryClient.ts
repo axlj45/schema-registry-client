@@ -1,7 +1,7 @@
+import { ISchemaRegistryHttpClient } from '../schema-registry-http-client';
+import { ISchemaResult } from '../schema-registry-http-client/models';
+import { AvroSerializer, IMessageEncoder, ISerializer, SchemaRegistryEncoder } from '../serialization';
 import { ISchemaRegistryClient } from './ISchemaRegistryClient';
-import { ISchemaRegistryHttpClient } from './schema-registry-http-client';
-import { ISchemaResult } from './schema-registry-http-client/models';
-import { AvroSerializer, IMessageEncoder, ISerializer, SchemaRegistryEncoder } from './serialization';
 
 export class AvroSchemaRegistryClient implements ISchemaRegistryClient {
   constructor(
