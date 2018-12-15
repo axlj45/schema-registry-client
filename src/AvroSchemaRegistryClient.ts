@@ -1,12 +1,12 @@
 import { ISchemaRegistryClient } from './ISchemaRegistryClient';
 import { ISchemaRegistryHttpClient } from './schema-registry-http-client';
-import { IMessageEncoder, ISerializer } from './serialization';
+import { AvroSerializer, IMessageEncoder, ISerializer, SchemaRegistryEncoder } from './serialization';
 
 export class AvroSchemaRegistryClient implements ISchemaRegistryClient {
   constructor(
     private client: ISchemaRegistryHttpClient,
-    private serializer: ISerializer,
-    private encoder: IMessageEncoder
+    private serializer: ISerializer = new AvroSerializer(),
+    private encoder: IMessageEncoder = new SchemaRegistryEncoder()
   ) { }
 
   public async encodeBySubject<Tin>(obj: Tin, subject: string): Promise<Buffer> {
