@@ -1,5 +1,5 @@
 import { AvroSchemaRegistryClient } from "./AvroSchemaRegistryClient";
-import { HttpClient } from "./http-client";
+import { CachingHttpClient, HttpClient, IHttpClient } from "./http-client";
 import { SchemaRegistryHttpClient } from './schema-registry-http-client';
 
 export class SchemaRegistryClient {
@@ -8,13 +8,24 @@ export class SchemaRegistryClient {
     return this.instance;
   }
 
-  public static create(schemaRegistryUrl: string): AvroSchemaRegistryClient {
-    const httpClient = new HttpClient(schemaRegistryUrl);
+  public static create(schemaRegistryUrl: string, cacheResults: boolean = true): AvroSchemaRegistryClient {
+    const httpClient = this.getHttpClient(schemaRegistryUrl, cacheResults);
     const registryHttpClient = new SchemaRegistryHttpClient(httpClient);
-
     this.instance = new AvroSchemaRegistryClient(registryHttpClient);
+
     return this.instance;
   }
 
   private static instance: undefined | AvroSchemaRegistryClient = undefined;
+
+  private static getHttpClient(url: string, cacheResults: boolean): IHttpClient {
+    const httpClient = new HttpClient(url);
+
+    if (cacheResults) {
+      return new CachingHttpClient(httpClient);
+    }
+    else {
+      return httpClient;
+    }
+  }
 }
