@@ -12,10 +12,14 @@ export class SchemaRegistryEncoder {
   private ID_BUFFER_WIDTH = 4;
 
   public decodeAvroBuffer(buffer: Buffer): ISchemaRegistryEncoding {
+    if (buffer.length < 6) {
+      throw Error('Invalid buffer.');
+    }
+
     const versionByte = buffer.readUInt8(this.VERSION_BUFFER_POSITION);
 
     if (versionByte !== this.SCHEMA_REGISTRY_VERSION) {
-      throw Error("Invalid schema registry data.  Unable to determine schema registry versioin.")
+      throw Error("Invalid schema registry data.  Unable to determine schema registry version.")
     }
 
     const schemaRegistryId = buffer.readUInt32BE(this.ID_BUFFER_POSITION);
@@ -26,8 +30,8 @@ export class SchemaRegistryEncoder {
     const buffer = request.buffer || Buffer.alloc(0);
     const originalBufferLength = buffer.length;
 
-    if (originalBufferLength < 6) {
-      throw Error('Invalid buffer.');
+    if (originalBufferLength === 0) {
+      throw Error('No data found to encode.');
     }
 
     const encodingLength = this.VERSION_BUFFER_WIDTH + this.ID_BUFFER_WIDTH;
