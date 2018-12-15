@@ -8,7 +8,7 @@ export class AvroSerializer implements ISerializer {
   }
 
   public deserialize<Tout>(buffer: Buffer, schema: string): Tout {
-    const avro = Type.forSchema(schema);
+    const avro = Type.forSchema(JSON.parse(schema));
     return avro.fromBuffer(buffer);
   }
 }
