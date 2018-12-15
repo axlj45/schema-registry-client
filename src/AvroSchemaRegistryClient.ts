@@ -1,5 +1,6 @@
 import { ISchemaRegistryClient } from './ISchemaRegistryClient';
 import { ISchemaRegistryHttpClient } from './schema-registry-http-client';
+import { ISchemaResult } from './schema-registry-http-client/models';
 import { AvroSerializer, IMessageEncoder, ISerializer, SchemaRegistryEncoder } from './serialization';
 
 export class AvroSchemaRegistryClient implements ISchemaRegistryClient {
@@ -27,5 +28,9 @@ export class AvroSchemaRegistryClient implements ISchemaRegistryClient {
     const schemaRequest = await this.client.getSchemaById(encoding.schemaRegistryId);
     const obj = this.serializer.deserialize<Tout>(encoding.buffer, JSON.parse(schemaRequest.schema));
     return obj;
+  }
+
+  public async createSchema(subjectName: string, schema: object): Promise<ISchemaResult> {
+    return this.client.createSchema(subjectName, { schema: JSON.stringify(schema) });
   }
 }
