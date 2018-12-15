@@ -1,7 +1,7 @@
 {
   "name": "schema-registry-client",
   "version": "0.0.0-development",
-  "description": "Confluent Avro schema registry client",
+  "description": "Avro schema registry client for Confluent's Schema Registry",
   "main": "dist/index.js",
   "typings": "dist/types/index.d.ts",
   "scripts": {
