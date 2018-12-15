@@ -27,7 +27,7 @@ export class SchemaRegistryEncoder {
   }
 
   public encodeAvroBuffer(request: ISchemaRegistryEncoding): ISchemaRegistryEncoding {
-    const buffer = request.buffer || Buffer.alloc(0);
+    const buffer = request.buffer;
     const originalBufferLength = buffer.length;
 
     if (originalBufferLength === 0) {
