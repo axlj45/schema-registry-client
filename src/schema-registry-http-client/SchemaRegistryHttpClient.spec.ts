@@ -61,4 +61,113 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.get).toBeCalledWith('/subjects')
   })
 
+  it('should retrieve versions for a subject', async () => {
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: [1, 2] }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getSubjectVersions('subjectName');
+
+    expect(result).toEqual([1, 2]);
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/subjects/subjectName/versions')
+  })
+
+  it('should delete a subject', async () => {
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      delete: jest.fn(() => Promise.resolve({ data: [1, 2] }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.deleteSubject('subjectName');
+
+    expect(result).toEqual([1, 2]);
+    expect(client.delete).toBeCalledTimes(1);
+    expect(client.delete).toBeCalledWith('/subjects/subjectName')
+  })
+
+  it('should delete a schema by subject version', async () => {
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      delete: jest.fn(() => Promise.resolve({ data: [1, 2] }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.deleteSchemaBySubjectVersion('subjectName', 3);
+
+    expect(result).toEqual([1, 2]);
+    expect(client.delete).toBeCalledTimes(1);
+    expect(client.delete).toBeCalledWith('/subjects/subjectName/versions/3')
+  })
+
+  it('should retrieve schema information by subject version', async () => {
+    const expectedResult: ISchemaResult = {
+      id: 10,
+      schema: "{}",
+      subject: 'subjectName',
+      version: 3
+    }
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: expectedResult }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getSchemaInfoBySubjectVersion('subjectName', 20);
+
+    expect(result).toEqual(expectedResult);
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/subjects/subjectName/versions/20')
+  })
+
+  it('should retrieve latest schema information by subject', async () => {
+    const expectedResult: ISchemaResult = {
+      id: 10,
+      schema: "{}",
+      subject: 'subjectName',
+      version: 3
+    }
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: expectedResult }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getLatestSchemaInfoBySubject('subjectName');
+
+    expect(result).toEqual(expectedResult);
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/subjects/subjectName/versions/latest')
+  })
+
+  it('should retrieve schema only by subject version', async () => {
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } } }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getSchemaBySubjectVersion('subjectName', 5);
+
+    expect(result).toEqual({ schema: { key: 'schemaData' } });
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/subjects/subjectName/versions/5/schema')
+  })
+
+  it('should retrieve latest schema only by subject version', async () => {
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } } }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getLatestSchemaBySubject('subjectName');
+
+    expect(result).toEqual({ schema: { key: 'schemaData' } });
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/subjects/subjectName/versions/latest/schema')
+  })
 });
