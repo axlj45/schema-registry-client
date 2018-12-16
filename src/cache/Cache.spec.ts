@@ -46,7 +46,7 @@ describe('Cache', () => {
     expect(storeFnA).toBeCalledTimes(1);
   });
 
-  it('should not store an item of promse is unable to resolve', async () => {
+  it('should not store an item if promise is unable to resolve', async () => {
     const cache: ICache = new Cache();
 
     const msg = 'storeFnErr error occured';
