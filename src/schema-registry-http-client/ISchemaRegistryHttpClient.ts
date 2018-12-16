@@ -16,7 +16,7 @@ export interface ISchemaRegistryHttpClient {
   isCompatible(targetSubjectName: string, targetSubjectVersion: string, sourceSchema: ISchemaRequest): Promise<boolean>
   isCompatibleAgainstLatest(targetSubjectName: string, sourceSchema: ISchemaRequest): Promise<boolean>
   setGlobalCompatiblity(compatiblity: CompatibilityType): Promise<IConfigurationResult>;
-  getConfigurationation(): Promise<IConfigurationResult>;
+  getConfiguration(): Promise<IConfigurationResult>;
   setSubjectCompatibility(subjectName: string, compatiblity: CompatibilityType): Promise<IConfigurationResult>
   getSubjectConfiguration(subjectName: string): Promise<IConfigurationResult>;
 }

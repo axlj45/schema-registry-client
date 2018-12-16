@@ -155,7 +155,7 @@ export class SchemaRegistryHttpClient implements ISchemaRegistryHttpClient {
     }
   }
 
-  public async getConfigurationation(): Promise<IConfigurationResult> {
+  public async getConfiguration(): Promise<IConfigurationResult> {
     const resource = '/config';
 
     try {

@@ -1,6 +1,6 @@
 import { SchemaRegistryHttpClient } from '.';
-import { IHttpClient, IHttpResponse } from '../http-client';
-import { ISchemaResult } from './models';
+import { IHttpClient } from '../http-client';
+import { CompatibilityType, ISchemaResult } from './models';
 import { ISchemaRequest } from './models/ISchemaRequest';
 
 describe('SchemaRegistryHttpClient', () => {
@@ -169,5 +169,95 @@ describe('SchemaRegistryHttpClient', () => {
     expect(result).toEqual({ schema: { key: 'schemaData' } });
     expect(client.get).toBeCalledTimes(1);
     expect(client.get).toBeCalledWith('/subjects/subjectName/versions/latest/schema')
+  })
+
+  it('should create a new schema', async () => {
+    const payload = { schema: "{}" };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      post: jest.fn(() => Promise.resolve({ data: payload }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.createSchema('subjectName', payload);
+
+    expect(result).toEqual({ schema: "{}" });
+    expect(client.post).toBeCalledTimes(1);
+    expect(client.post).toBeCalledWith('/subjects/subjectName/versions', payload)
+  })
+
+  it('should identify if schema exists', async () => {
+    const payload = { schema: "{}" };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      post: jest.fn(() => Promise.resolve({ data: payload }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.schemaExists('subjectName', payload);
+
+    expect(result).toEqual({ schema: "{}" });
+    expect(client.post).toBeCalledTimes(1);
+    expect(client.post).toBeCalledWith('/subjects/subjectName', payload)
+  })
+
+  it('should update global config', async () => {
+    const payload = { compatibility: CompatibilityType.FORWARD };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      put: jest.fn(() => Promise.resolve({ data: payload }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.setGlobalCompatiblity(CompatibilityType.FORWARD);
+
+    expect(result).toEqual(payload);
+    expect(client.put).toBeCalledTimes(1);
+    expect(client.put).toBeCalledWith('/config', payload)
+  })
+
+  it('should update subject config', async () => {
+    const payload = { compatibility: CompatibilityType.FORWARD };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      put: jest.fn(() => Promise.resolve({ data: payload }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.setSubjectCompatibility('subjectName', CompatibilityType.FORWARD);
+
+    expect(result).toEqual(payload);
+    expect(client.put).toBeCalledTimes(1);
+    expect(client.put).toBeCalledWith('/config/subjectName', payload)
+  })
+
+  it('should get global config', async () => {
+    const payload = { compatibility: CompatibilityType.FORWARD };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: payload }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getConfiguration();
+
+    expect(result).toEqual(payload);
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/config')
+  })
+
+  it('should get subject config', async () => {
+    const payload = { compatibility: CompatibilityType.FORWARD };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.resolve({ data: payload }))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = await sut.getSubjectConfiguration('subjectName');
+
+    expect(result).toEqual(payload);
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/config/subjectName')
   })
 });
