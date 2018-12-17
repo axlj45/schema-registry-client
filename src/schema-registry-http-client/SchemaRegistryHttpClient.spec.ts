@@ -18,6 +18,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.get).toBeCalledWith('/schemas/ids/30')
   })
 
+  it('should not retrieve a schema by id when it does not exist', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.getSchemaById(30);
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.get).toBeCalledTimes(1);
+  })
+
   it('should verify compatibility', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
@@ -47,6 +61,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.post).toBeCalledWith('/compatibility/subjects/targetSubject/versions/latest', { schema: '{}' })
   })
 
+  it('should not verify latest compatibility when an error occurs', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      post: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.isCompatibleAgainstLatest('targetSubject', { schema: '{}' });
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.post).toBeCalledTimes(1);
+  })
+
   it('should retrieve subjects', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
@@ -59,6 +87,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(result).toEqual(['subject1', 'subject2']);
     expect(client.get).toBeCalledTimes(1);
     expect(client.get).toBeCalledWith('/subjects')
+  })
+
+  it('should not retrieve subjects if an error occurs', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.getSubjects();
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.get).toBeCalledTimes(1);
   })
 
   it('should retrieve versions for a subject', async () => {
@@ -75,6 +117,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.get).toBeCalledWith('/subjects/subjectName/versions')
   })
 
+  it('should not retrieve versions for a subject if it does not exist', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.getSubjectVersions('subjectName');
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.get).toBeCalledTimes(1);
+  })
+
   it('should delete a subject', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
@@ -89,6 +145,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.delete).toBeCalledWith('/subjects/subjectName')
   })
 
+  it('should not delete a subject if it does not exist', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      delete: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.deleteSubject('subjectName');
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.delete).toBeCalledTimes(1);
+  })
+
   it('should delete a schema by subject version', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
@@ -101,6 +171,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(result).toEqual([1, 2]);
     expect(client.delete).toBeCalledTimes(1);
     expect(client.delete).toBeCalledWith('/subjects/subjectName/versions/3')
+  })
+
+  it('should not delete a schema by subject version if it does not exist', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      delete: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.deleteSchemaBySubjectVersion('subjectName', 3);
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.delete).toBeCalledTimes(1);
   })
 
   it('should retrieve schema information by subject version', async () => {
@@ -123,6 +207,8 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.get).toBeCalledWith('/subjects/subjectName/versions/20')
   })
 
+
+
   it('should retrieve latest schema information by subject', async () => {
     const expectedResult: ISchemaResult = {
       id: 10,
@@ -141,6 +227,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(result).toEqual(expectedResult);
     expect(client.get).toBeCalledTimes(1);
     expect(client.get).toBeCalledWith('/subjects/subjectName/versions/latest')
+  })
+
+  it('should not retrieve latest information for a subject if it does not exist', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.getLatestSchemaInfoBySubject('subjectName');
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.get).toBeCalledTimes(1);
   })
 
   it('should retrieve schema only by subject version', async () => {
@@ -257,6 +357,21 @@ describe('SchemaRegistryHttpClient', () => {
     const result = await sut.getSubjectConfiguration('subjectName');
 
     expect(result).toEqual(payload);
+    expect(client.get).toBeCalledTimes(1);
+    expect(client.get).toBeCalledWith('/config/subjectName')
+  })
+
+  it('should not get subject config when subject does not exist', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      get: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.getSubjectConfiguration('subjectName');
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
     expect(client.get).toBeCalledTimes(1);
     expect(client.get).toBeCalledWith('/config/subjectName')
   })
