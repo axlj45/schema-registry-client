@@ -1,5 +1,7 @@
-describe('placeholder', () => {
-  it('should return zero', () => {
-    expect(0).toBe(0);
+import { SchemaRegistryClient } from '.'
+
+describe('Public API', () => {
+  it('should expose SchemaRegistryClient', () => {
+    expect(SchemaRegistryClient).toBeTruthy();
   })
 });
