@@ -1,5 +1,5 @@
 # schema-registry-client
-Confluent Avro schema registry client
+Schema registry client for Confluent's Avro Schema Registry.
 
 [![Build Status](https://travis-ci.org/axlj45/schema-registry-client.svg?branch=master)](https://travis-ci.org/axlj45/schema-registry-client)
 [![codecov](https://codecov.io/gh/axlj45/schema-registry-client/branch/master/graph/badge.svg)](https://codecov.io/gh/axlj45/schema-registry-client)
@@ -64,9 +64,30 @@ schemaRegistry
   .then(schemaRegistryAvroBuffer => console.log(schemaRegistryAvroBuffer))
 ```
 
-### Serialize JSON
+### Deserialize JSON
 
-WIP
+
+```ts
+import { SchemaRegistryClient } from './SchemaRegistryClient';
+
+const schemaRegistry = SchemaRegistryClient.create('http://localhost:8081');
+
+interface IData {
+  first: string;
+  last: string;
+  age: number;
+}
+
+const buffer = /* consume message buffer from kafka */
+
+schemaRegistry
+  .decode<IData>(buffer)
+  .then(data => {
+    console.log(`First Name: ${data.first}
+    Last Name: ${data.last}
+    Age: ${data.age}`)
+  })
+```
 
 ## Future Development
 
