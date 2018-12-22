@@ -20,7 +20,7 @@ export class HttpClient implements IHttpClient {
   }
 
   public addHeader(key: string, value: string): void {
-    // this.client.defaults.headers.post[key] = value;
+    this.client.defaults.headers[key] = value;
   }
 
   public get<T>(resourceUri: string): Promise<IHttpResponse<T>> {
