@@ -66,10 +66,7 @@ describe('AvroSchemaRegistryClient', () => {
     const avroClient = new AvroSchemaRegistryClient(client as ISchemaRegistryHttpClient);
     const result = await avroClient.createSchema('dataSchema', schema);
 
-    expect(result.id).toBe(200);
-    expect(result.subject).toBe('dataSchema');
-    expect(result.version).toBe(3);
-    expect(result.schema).toEqual(JSON.stringify(schema));
+    expect(result).toBe(200);
   })
 
   it('should decode an avro buffer into a javascript object', async () => {
