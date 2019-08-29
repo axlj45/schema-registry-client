@@ -286,6 +286,20 @@ describe('SchemaRegistryHttpClient', () => {
     expect(client.post).toBeCalledWith('/subjects/subjectName/versions', payload)
   })
 
+  it('should throw an error when creating a new schema fails', async () => {
+    const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
+    const client: Partial<IHttpClient> = {
+      addHeader: jest.fn(),
+      post: jest.fn(() => Promise.reject(error))
+    }
+    const sut = new SchemaRegistryHttpClient(client as IHttpClient);
+
+    const result = sut.createSchema('subjectName', { schema: "{}" });
+
+    await expect(result).rejects.toEqual({ errorCode: '500', httpStatusCode: 500, message: 'test err' });
+    expect(client.post).toBeCalledTimes(1);
+  })
+
   it('should identify if schema exists', async () => {
     const payload = { schema: "{}" };
     const client: Partial<IHttpClient> = {
