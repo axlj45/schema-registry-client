@@ -81,7 +81,7 @@
     "cz-conventional-changelog": "^2.1.0",
     "jest": "^24.8.0",
     "mock-fs": "^4.7.0",
-    "semantic-release": "^15.13.20",
+    "semantic-release": "^17.2.3",
     "travis-deploy-once": "^5.0.10",
     "ts-jest": "^23.10.5",
     "tslint": "^5.11.0",
