@@ -16,6 +16,7 @@
     "url": "https://github.com/axlj45/schema-registry-client.git"
   },
   "files": [
+    "src",
     "dist",
     "!*.js.map"
   ],
