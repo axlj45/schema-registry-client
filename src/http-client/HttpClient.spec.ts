@@ -1,4 +1,5 @@
 import { HttpClient } from '.';
+import { expect } from '@jest/globals';
 
 describe('HttpClient', () => {
   it('should add a header', () => {

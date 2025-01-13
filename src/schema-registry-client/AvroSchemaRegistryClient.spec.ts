@@ -1,6 +1,7 @@
 // tslint:disable:object-literal-sort-keys
 import { AvroSchemaRegistryClient } from '.'
 import { ISchemaRegistryHttpClient } from '../schema-registry-http-client';
+import { expect, jest } from '@jest/globals';
 
 describe('AvroSchemaRegistryClient', () => {
   const schema = {
@@ -17,19 +18,19 @@ describe('AvroSchemaRegistryClient', () => {
   interface IData { first?: null | string; last: string, age?: null | number };
 
   const client: Partial<ISchemaRegistryHttpClient> = {
-    createSchema: jest.fn((subjectName, schemaContent) => Promise.resolve({
+    createSchema: jest.fn((subjectName: string, schemaContent: unknown) => Promise.resolve({
       id: 200,
       schema: JSON.stringify(schemaContent),
-      subject: subjectName,
+      subject: subjectName as string,
       version: 3,
     })),
-    getLatestSchemaInfoBySubject: jest.fn((subjectName) => Promise.resolve({
+    getLatestSchemaInfoBySubject: jest.fn((subjectName: string) => Promise.resolve({
       id: 28,
       schema: JSON.stringify(schema),
       subject: subjectName,
       version: 1,
     })),
-    getSchemaById: jest.fn((data, schemaId) => Promise.resolve({
+    getSchemaById: jest.fn((schemaId) => Promise.resolve({
       schema: JSON.stringify(schema)
     }))
   };
