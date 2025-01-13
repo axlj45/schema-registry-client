@@ -41,7 +41,7 @@ describe('SchemaRegistryEncoder', () => {
   it('should return a valid buffer', () => {
     const data = 'some data';
     const request: ISchemaRegistryEncoding = {
-      buffer: new Buffer(data),
+      buffer: Buffer.from(data),
       schemaRegistryId: 10,
       versionByte: 0
     };

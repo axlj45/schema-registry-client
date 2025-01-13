@@ -1,0 +1,45 @@
+name: Node.js CI
+
+on:
+  push:
+    branches:
+      - "**"
+      - "!v**"
+  pull_request:
+    branches:
+      - "**"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm run test
+
+      - name: Build project
+        run: npm run build
+
+      - name: Run code coverage
+        if: success()
+        run: npm run codecov
+
+      - name: Run semantic release
+        if: success() && github.ref == 'refs/heads/main'
+        run: npm run semantic-release

@@ -3,7 +3,7 @@ import { CachingHttpClient, IHttpClient } from '.';
 describe('CachingHttpClient', () => {
   it('should only call get once', async () => {
     const client: Partial<IHttpClient> = {
-      get: jest.fn(() => Promise.resolve({}))
+      get: jest.fn(() => Promise.resolve({ message: '', statusCode: 200, data: {} as any }))
     }
     const sut: IHttpClient = new CachingHttpClient(client as IHttpClient);
 
@@ -17,7 +17,7 @@ describe('CachingHttpClient', () => {
 
   it('should call post as many times at is called', async () => {
     const client: Partial<IHttpClient> = {
-      post: jest.fn(() => Promise.resolve({}))
+      post: jest.fn(() => Promise.resolve({ message: '', statusCode: 200, data: {} as any }))
     }
     const sut: IHttpClient = new CachingHttpClient(client as IHttpClient);
 
@@ -31,7 +31,7 @@ describe('CachingHttpClient', () => {
 
   it('should call put as many times at is called', async () => {
     const client: Partial<IHttpClient> = {
-      put: jest.fn(() => Promise.resolve({}))
+      put: jest.fn(() => Promise.resolve({ message: '', statusCode: 200, data: {} as any }))
     }
     const sut: IHttpClient = new CachingHttpClient(client as IHttpClient);
 
@@ -45,7 +45,7 @@ describe('CachingHttpClient', () => {
 
   it('should call delete as many times at is called', async () => {
     const client: Partial<IHttpClient> = {
-      delete: jest.fn(() => Promise.resolve({}))
+      delete: jest.fn(() => Promise.resolve({ message: '', statusCode: 200, data: {} as any}))
     }
     const sut: IHttpClient = new CachingHttpClient(client as IHttpClient);
 

@@ -29,7 +29,7 @@ describe('AvroSchemaRegistryClient', () => {
       subject: subjectName,
       version: 1,
     })),
-    getSchemaById: jest.fn((data, schemaId) => Promise.resolve({
+    getSchemaById: jest.fn((schemaId) => Promise.resolve({
       schema: JSON.stringify(schema)
     }))
   };

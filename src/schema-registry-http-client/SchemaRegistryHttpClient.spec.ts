@@ -1,5 +1,5 @@
 import { SchemaRegistryHttpClient } from '.';
-import { IHttpClient } from '../http-client';
+import { IHttpClient, IHttpResponse } from '../http-client';
 import { CompatibilityType, ISchemaResult } from './models';
 import { ISchemaRequest } from './models/ISchemaRequest';
 
@@ -7,7 +7,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should retrieve schema by id', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } } }))
+      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } } }  as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -22,7 +22,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.reject(error))
+      get: jest.fn<Promise<IHttpResponse<any>>, any[]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -35,7 +35,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should verify compatibility', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      post: jest.fn(jest.fn(() => Promise.resolve({ data: { is_compatible: true } })))
+      post: jest.fn(() => Promise.resolve({ data: { is_compatible: true } } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -50,7 +50,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should verify latest compatibility', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      post: jest.fn(jest.fn(() => Promise.resolve({ data: { is_compatible: true } })))
+      post: jest.fn(() => Promise.resolve({ data: { is_compatible: true }, message: '', statusCode: 200 } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -65,7 +65,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      post: jest.fn(() => Promise.reject(error))
+      post: jest.fn<Promise<IHttpResponse<any>>, [string, any]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -78,7 +78,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should retrieve subjects', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: ['subject1', 'subject2'] }))
+      get: jest.fn((resourceUri: string) => Promise.resolve({ data: ['subject1', 'subject2'] } as IHttpResponse<string[]>)) as jest.MockedFunction<IHttpClient['get']>
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -93,7 +93,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.reject(error))
+      get: jest.fn<Promise<IHttpResponse<any>>, [string]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -106,7 +106,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should retrieve versions for a subject', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: [1, 2] }))
+      get: jest.fn((resourceUri: string) => Promise.resolve({ data: [1, 2] } as IHttpResponse<number[]>)) as jest.MockedFunction<IHttpClient['get']>
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -121,7 +121,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.reject(error))
+      get: jest.fn<Promise<IHttpResponse<any>>, [string]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -134,7 +134,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should delete a subject', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      delete: jest.fn(() => Promise.resolve({ data: [1, 2] }))
+      delete: jest.fn((resourceUri: string) => Promise.resolve({ data: [1, 2] } as IHttpResponse<number[]>)) as jest.MockedFunction<IHttpClient['delete']>
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -149,7 +149,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      delete: jest.fn(() => Promise.reject(error))
+      delete: jest.fn<Promise<IHttpResponse<any>>, [string]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -162,7 +162,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should delete a schema by subject version', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      delete: jest.fn(() => Promise.resolve({ data: [1, 2] }))
+      delete: jest.fn((resourceUri: string) => Promise.resolve({ data: [1, 2] } as IHttpResponse<number[]>)) as jest.MockedFunction<IHttpClient['delete']>
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -177,7 +177,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      delete: jest.fn(() => Promise.reject(error))
+      delete: jest.fn<Promise<IHttpResponse<any>>, [string]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -196,7 +196,7 @@ describe('SchemaRegistryHttpClient', () => {
     }
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: expectedResult }))
+      get: jest.fn().mockResolvedValue({ data: expectedResult } as IHttpResponse<ISchemaResult>)
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -218,7 +218,7 @@ describe('SchemaRegistryHttpClient', () => {
     }
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: expectedResult }))
+      get: jest.fn().mockResolvedValue({ data: expectedResult, message: '', statusCode: 200 } as IHttpResponse<ISchemaResult>) as jest.MockedFunction<IHttpClient['get']>
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -233,7 +233,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.reject(error))
+      get: jest.fn<Promise<IHttpResponse<any>>, [string]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -246,7 +246,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should retrieve schema only by subject version', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } } }))
+      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } }, message: '', statusCode: 200 } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -260,7 +260,7 @@ describe('SchemaRegistryHttpClient', () => {
   it('should retrieve latest schema only by subject version', async () => {
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } } }))
+      get: jest.fn(() => Promise.resolve({ data: { schema: { key: 'schemaData' } }, message: '', statusCode: 200 } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -275,7 +275,7 @@ describe('SchemaRegistryHttpClient', () => {
     const payload = { schema: "{}" };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      post: jest.fn(() => Promise.resolve({ data: payload }))
+      post: jest.fn(() => Promise.resolve({ data: payload, message: '', statusCode: 200 } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -290,7 +290,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      post: jest.fn(() => Promise.reject(error))
+      post: jest.fn<Promise<IHttpResponse<any>>, [string, any]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -304,7 +304,7 @@ describe('SchemaRegistryHttpClient', () => {
     const payload = { schema: "{}" };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      post: jest.fn(() => Promise.resolve({ data: payload }))
+      post: jest.fn(() => Promise.resolve({ data: payload, message: '', statusCode: 200 } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -319,7 +319,7 @@ describe('SchemaRegistryHttpClient', () => {
     const payload = { compatibility: CompatibilityType.FORWARD };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      put: jest.fn(() => Promise.resolve({ data: payload }))
+      put: jest.fn(() => Promise.resolve({ data: payload } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -334,7 +334,7 @@ describe('SchemaRegistryHttpClient', () => {
     const payload = { compatibility: CompatibilityType.FORWARD };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      put: jest.fn(() => Promise.resolve({ data: payload }))
+      put: jest.fn(() => Promise.resolve({ data: payload }  as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -349,7 +349,7 @@ describe('SchemaRegistryHttpClient', () => {
     const payload = { compatibility: CompatibilityType.FORWARD };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: payload }))
+      get: jest.fn(() => Promise.resolve({ data: payload } as IHttpResponse<any>))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -364,7 +364,7 @@ describe('SchemaRegistryHttpClient', () => {
     const payload = { compatibility: CompatibilityType.FORWARD };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.resolve({ data: payload }))
+      get: jest.fn().mockResolvedValue({ data: payload, message: '', statusCode: 200 } as IHttpResponse<{ compatibility: CompatibilityType }>)
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
@@ -379,7 +379,7 @@ describe('SchemaRegistryHttpClient', () => {
     const error = { response: { status: 500, data: { error_code: '500', message: 'test err' } } };
     const client: Partial<IHttpClient> = {
       addHeader: jest.fn(),
-      get: jest.fn(() => Promise.reject(error))
+      get: jest.fn<Promise<IHttpResponse<any>>, [string]>(() => Promise.reject(error))
     }
     const sut = new SchemaRegistryHttpClient(client as IHttpClient);
 
