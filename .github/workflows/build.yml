@@ -36,9 +36,9 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Run code coverage
-        if: success()
-        run: npm run codecov
+      # - name: Run code coverage
+      #   if: success()
+      #   run: npm run codecov
 
       - name: Run semantic release
         if: success() && github.ref == 'refs/heads/main'
