@@ -1,4 +1,5 @@
 import { IMessageEncoder, SchemaRegistryEncoder } from './';
+import { expect } from '@jest/globals';
 import ISchemaRegistryEncoding from './ISchemaRegistryEncoding';
 
 describe('SchemaRegistryEncoder', () => {

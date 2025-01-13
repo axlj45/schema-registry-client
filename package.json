@@ -72,24 +72,22 @@
     }
   },
   "devDependencies": {
-    "@types/jest": "^27.5.2",
     "@types/mocha": "^10.0.10",
-    "@types/mock-fs": "^3.6.30",
-    "@types/node": "^16.18.101",
-    "codecov": "^3.1.0",
+    "@types/node": "^22.10.5",
+    "codecov": "^3.8.3",
     "cz-conventional-changelog": "^2.1.0",
-    "jest": "^27.5.1",
+    "jest": "^29.7.0",
     "mock-fs": "^5.2.0",
     "semantic-release": "^15.13.20",
     "travis-deploy-once": "^5.0.10",
-    "ts-jest": "^27.1.4",
+    "ts-jest": "^29.2.5",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.17.0",
     "tslint-config-standard": "^8.0.1",
-    "typescript": "^3.9.9"
+    "typescript": "^5.7.3"
   },
   "dependencies": {
-    "avsc": "^5.4.7",
-    "axios": "^0.18.1"
+    "avsc": "^5.7.7",
+    "axios": "^1.7.9"
   }
 }

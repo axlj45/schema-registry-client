@@ -1,5 +1,6 @@
 // tslint:disable:object-literal-sort-keys
 import { AvroSerializer } from './';
+import { expect } from '@jest/globals';
 
 describe('AvroSerializer', () => {
   const serializer = new AvroSerializer();

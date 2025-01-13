@@ -1,4 +1,5 @@
 import { Cache, ICache } from './';
+import { expect, jest } from '@jest/globals';
 
 describe('Cache', () => {
   it('should retrieve a stored item as a promise', async () => {

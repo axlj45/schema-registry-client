@@ -1,5 +1,6 @@
 import { SchemaRegistryClient } from '.';
 import { AvroSchemaRegistryClient } from './schema-registry-client';
+import { expect } from '@jest/globals';
 
 describe('SchemaRegistryClient', () => {
   it('should create a new instance', () => {
