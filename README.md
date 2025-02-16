@@ -1,7 +1,7 @@
 # schema-registry-client
 Schema registry client for Confluent's Avro Schema Registry.
 
-[![Build Status](https://travis-ci.org/axlj45/schema-registry-client.svg?branch=master)](https://travis-ci.org/axlj45/schema-registry-client)
+[![Build Status](https://github.com/axlj45/schema-registry-client/actions/workflows/build.yml/badge.svg)](https://github.com/axlj45/schema-registry-client/actions/workflows/build.yml)
 [![codecov](https://codecov.io/gh/axlj45/schema-registry-client/branch/master/graph/badge.svg)](https://codecov.io/gh/axlj45/schema-registry-client)
 
 ## Usage
